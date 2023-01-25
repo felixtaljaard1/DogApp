@@ -15,6 +15,9 @@
  */
 package dev.spikeysanju.wiggles.component
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,17 +26,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import dev.spikeysanju.wiggles.R
 
 @Composable
@@ -57,20 +61,46 @@ fun DogInfoCard(name: String, gender: String, location: String) {
             Row(verticalAlignment = Alignment.Bottom) {
 
                 val locationIcon: Painter = painterResource(id = R.drawable.ic_location)
+                val context = LocalContext.current
 
-                Icon(
-                    painter = locationIcon,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp, 16.dp),
-                    tint = Color.Red
-                )
+                val gmmIntentUri = Uri.parse("google.streetview:cbll=46.414382,10.013988")
+                val noIntentUri = Uri.parse("https://www.google.com")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                val noIntent = Intent(Intent.ACTION_VIEW, noIntentUri)
 
-                Text(
-                    text = location,
-                    modifier = Modifier.padding(8.dp, 12.dp, 12.dp, 0.dp),
-                    color = MaterialTheme.colors.surface,
-                    style = MaterialTheme.typography.caption
-                )
+              //  mapIntent.setPackage("com.google.android.apps.maps")
+
+                Button(onClick = {
+                    try {
+                        mapIntent.let {
+
+                            startActivity(context, mapIntent, null)
+                        }
+                    } catch (e: Exception) {
+                        mapIntent.let {
+
+                            startActivity(context, noIntent, null)
+                        }
+                    }
+                }
+                    ,
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+                ) {
+
+                    Icon(
+                        painter = locationIcon,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp, 16.dp),
+                        tint = Color.Red
+                    )
+
+                    Text(
+                        text = location,
+                        modifier = Modifier.padding(8.dp, 12.dp, 12.dp, 0.dp),
+                        color = MaterialTheme.colors.surface,
+                        style = MaterialTheme.typography.caption
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -87,3 +117,4 @@ fun DogInfoCard(name: String, gender: String, location: String) {
         }
     }
 }
+

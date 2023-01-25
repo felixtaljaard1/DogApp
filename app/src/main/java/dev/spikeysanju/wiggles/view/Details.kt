@@ -48,14 +48,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import dev.spikeysanju.wiggles.R
 import dev.spikeysanju.wiggles.component.DogInfoCard
 import dev.spikeysanju.wiggles.component.InfoCard
 import dev.spikeysanju.wiggles.component.OwnerCard
 import dev.spikeysanju.wiggles.data.FakeDogDatabase
+import dev.spikeysanju.wiggles.navigation.Screen
 
 @Composable
-fun Details(navController: NavController, id: Int) {
+fun Details(navController: NavHostController, id: Int) {
 
     Scaffold(
         topBar = {
@@ -79,13 +81,14 @@ fun Details(navController: NavController, id: Int) {
         },
 
         content = {
-            DetailsView(id)
+            DetailsView(id, navController)
         }
     )
 }
 
 @Composable
-fun DetailsView(id: Int) {
+fun DetailsView(id: Int, navController: NavHostController
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -170,7 +173,7 @@ fun DetailsView(id: Int) {
         item {
             Spacer(modifier = Modifier.height(36.dp))
             Button(
-                onClick = { /* Do something! */ },
+                onClick = { navController.navigate(Screen.Adopt.route) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
